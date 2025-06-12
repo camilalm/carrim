@@ -33,3 +33,6 @@
 /config/master.key
 
 Original_README.md
+
+# Ignore Byebug command history file.
+.byebug_history
