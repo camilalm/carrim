@@ -2,28 +2,56 @@ require 'rails_helper'
 
 RSpec.describe Cart, type: :model do
   context 'when validating' do
+    let(:cart) { described_class.new(total_price: -1) }
+
     it 'validates numericality of total_price' do
-      cart = described_class.new(total_price: -1)
       expect(cart.valid?).to be_falsey
       expect(cart.errors[:total_price]).to include("must be greater than or equal to 0")
     end
   end
 
   describe 'mark_as_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart) }
+    let(:shopping_cart) { create(:shopping_cart, last_interaction_at: last_interaction_at) }
+    let(:limit_datetime) { 3.hours.ago }
 
-    it 'marks the shopping cart as abandoned if inactive for a certain time' do
-      shopping_cart.update(last_interaction_at: 3.hours.ago)
-      expect { shopping_cart.mark_as_abandoned }.to change { shopping_cart.abandoned? }.from(false).to(true)
+    context 'when shopping cart last interaction is before limit' do
+      let(:last_interaction_at) { limit_datetime - 1.minute }
+
+      it 'marks as abandoned ' do
+        expect { shopping_cart.mark_as_abandoned }.to change { shopping_cart.abandoned? }.from(false).to(true)
+      end
+    end
+
+    context 'when shopping cart last interaction is after limit' do
+      let(:last_interaction_at) { limit_datetime + 1.minute }
+
+      it 'does not mark as abandoned' do
+        shopping_cart.mark_as_abandoned
+        expect(shopping_cart.abandoned).to be_falsey
+      end
     end
   end
 
   describe 'remove_if_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart, last_interaction_at: 7.days.ago) }
+    let(:shopping_cart) { create(:shopping_cart, last_interaction_at: last_interaction_at, abandoned: true) }
+    let(:limit_datetime) { 7.days.ago }
 
-    it 'removes the shopping cart if abandoned for a certain time' do
-      shopping_cart.mark_as_abandoned
-      expect { shopping_cart.remove_if_abandoned }.to change { Cart.count }.by(-1)
+    context 'when shopping cart was abandoned before limit' do
+      let(:last_interaction_at) { limit_datetime - 1.minute }
+
+      it 'removes the shopping cart' do
+        shopping_cart.remove_if_abandoned
+        expect(Cart.exists?(shopping_cart.id)).to be_falsey
+      end
+    end
+
+    context 'when shopping cart was abandoned after limit' do
+      let(:last_interaction_at) { limit_datetime + 1.minute }
+
+      it 'does not remove the shopping cart' do
+        shopping_cart.remove_if_abandoned
+        expect(Cart.exists?(shopping_cart.id)).to be_truthy
+      end
     end
   end
 end
