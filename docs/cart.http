@@ -1,0 +1,13 @@
+### Add product to cart
+##
+curl --request POST \
+     --url http://localhost:3339/cart/add_item \
+     --header 'accept: application/json' \
+     --data product_id=2 \
+     --data quantity=2
+
+
+### List products
+##
+curl --request GET \
+     --url http://localhost:3339/products
