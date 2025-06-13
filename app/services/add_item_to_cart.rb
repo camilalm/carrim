@@ -23,7 +23,7 @@ class AddItemToCart
   end
 
   def update_cart_total_price
-    cart.update(total_price: cart.total_price + (quantity * cart_item.product_price))
+    cart.update(total_price: CalculateCartTotalPrice.new(cart).perform)
   end
 
   def cart_item
