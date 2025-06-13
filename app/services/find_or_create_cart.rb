@@ -16,6 +16,6 @@ class FindOrCreateCart
   end
 
   def create_new_cart
-    Cart.create(total_price: 0)
+    Cart.create(total_price: 0, last_interaction_at: Time.now)
   end
 end
