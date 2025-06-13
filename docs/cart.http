@@ -1,7 +1,15 @@
+### Register cart adding a item
+##
+curl --request POST \
+     --url {{url}}/cart \
+     --header 'accept: application/json' \
+     --data product_id=2 \
+     --data quantity=2
+
 ### Add product to cart
 ##
 curl --request POST \
-     --url http://localhost:3339/cart/add_item \
+     --url {{url}}/cart/add_item \
      --header 'accept: application/json' \
      --data product_id=2 \
      --data quantity=2
@@ -10,4 +18,4 @@ curl --request POST \
 ### List products
 ##
 curl --request GET \
-     --url http://localhost:3339/products
+     --url {{url}}/products
