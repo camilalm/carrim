@@ -4,7 +4,6 @@ RSpec.describe AddItemToCart do
   let(:service) { described_class.new(cart, params) }
   let(:product) { create(:product, price: 12.34) }
   let(:another_product) { create(:product, price: 5.1) }
-  let(:cart) { create(:cart) }
   let(:params) { { product_id: product.id, quantity: 4 } }
 
   context 'when cart is empty' do
