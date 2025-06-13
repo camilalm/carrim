@@ -11,7 +11,7 @@ services:
     redis:
         image: redis:7.0.15-alpine
         ports:
-            - '63799:6379' # TODO: change 6379:6379
+            - '6379:6379'
         volumes:
             - redis_data:/data
     web:
@@ -21,7 +21,7 @@ services:
             - .:/rails
             - tmp:/rails/tmp/
         ports:
-            - "3339:3000" # TODO: change 3000:3000
+            - "3000:3000"
         depends_on:
             - db
             - redis
@@ -71,4 +71,4 @@ volumes:
     postgres13: {}
     redis_data: {}
     tmp: {}
-    # test_tmp: {}
+    test_tmp: {}
