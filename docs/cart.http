@@ -20,6 +20,11 @@ curl --request POST \
      --data product_id=2 \
      --data quantity=2
 
+### Remove cart product
+##
+curl --request DELETE \
+     --url {{url}}/cart/{{product_id}} \
+     --header 'accept: application/json'
 
 ### List products
 ##

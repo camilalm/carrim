@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "/carts", type: :request do
-  pending "TODO: Escreva os testes de comportamento do controller de carrinho necessários para cobrir a sua implmentação #{__FILE__}"
   let(:valid_headers) { {} }
   let(:cart) { create(:cart, total_price: 10.0) }
   let(:cart_item) { create(:cart_item, cart: cart, product: product, quantity: 1) }
@@ -80,6 +79,48 @@ RSpec.describe "/carts", type: :request do
         subject
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+      end
+    end
+  end
+
+  describe "DELETE /cart/:product_id" do
+    let(:session_cart_id) { cart.id }
+
+    subject { delete "/cart/#{product.id}", headers: valid_headers, as: :json }
+
+    context 'when product is not in the cart' do
+      it 'returns status not found' do
+        subject
+        expect(response).to have_http_status(:not_found)
+        expect(parsed_json_response['error']).to eq('Produto informado não está no carrinho')
+      end
+    end
+
+    context 'when product is in the cart' do
+      before { cart_item }
+
+      it 'returns status ok and removes item product informed' do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(parsed_json_response['id']).to eq(cart.id)
+        expect(parsed_json_response['products']).to be_empty
+      end
+    end
+
+    context 'when product is in the cart and cart has other items' do
+      let!(:cart_item_another_product) do
+        another_product = create(:product, price: 5.1)
+        create(:cart_item, cart: cart, product: another_product, quantity: 2)
+      end
+
+      before { cart_item }
+
+      it 'returns status ok, removes item product informed and keep others' do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(parsed_json_response['id']).to eq(cart.id)
+        expect(parsed_json_response['products']).to be_present
+        expect(parsed_json_response['products'][0]['id']).to eq(cart_item_another_product.product_id)
       end
     end
   end
