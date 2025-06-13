@@ -30,6 +30,7 @@ module Store
     config.api_only = true
     config.session_store :cookie_store, key: '_store_session'
     config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
     config.middleware.use config.session_store, config.session_options
     config.active_job.queue_adapter = :sidekiq
   end
