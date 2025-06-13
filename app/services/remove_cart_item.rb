@@ -12,7 +12,7 @@ class RemoveCartItem
     return if cart_item.blank?
 
     remove_cart_item
-    update_cart_total_price
+    update_cart
     true
   end
 
@@ -22,8 +22,8 @@ class RemoveCartItem
     cart_item.destroy!
   end
 
-  def update_cart_total_price
-    cart.update(total_price: CalculateCartTotalPrice.new(cart).perform)
+  def update_cart
+    UpdateCart.new(cart).perform
   end
 
   def cart_item

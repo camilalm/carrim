@@ -13,7 +13,7 @@ class AddItemToCart
     return if quantity.blank?
 
     update_cart_item
-    update_cart_total_price
+    update_cart
   end
 
   private
@@ -22,8 +22,8 @@ class AddItemToCart
     cart_item.update(quantity: cart_item.quantity + quantity)
   end
 
-  def update_cart_total_price
-    cart.update(total_price: CalculateCartTotalPrice.new(cart).perform)
+  def update_cart
+    UpdateCart.new(cart).perform
   end
 
   def cart_item

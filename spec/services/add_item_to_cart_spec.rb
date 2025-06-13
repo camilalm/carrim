@@ -9,6 +9,8 @@ RSpec.describe AddItemToCart do
   context 'when cart is empty' do
     let(:cart) { create(:cart, total_price: 0) }
 
+    it { expect { service.perform }.to change { cart.reload.last_interaction_at } }
+
     it 'creates cart item' do
       expect(service.perform).to be_truthy
 
@@ -31,6 +33,8 @@ RSpec.describe AddItemToCart do
     let!(:cart_item_product) { create(:cart_item, cart: cart, product: product, quantity: 3) }
     let(:cart) { create(:cart, total_price: 37.02) }
 
+    it { expect { service.perform }.to change { cart.reload.last_interaction_at } }
+
     it 'updates cart item quantity' do
       expect(service.perform).to be_truthy
 
@@ -45,6 +49,8 @@ RSpec.describe AddItemToCart do
     let!(:cart_item_product) { create(:cart_item, cart: cart, product: product, quantity: 5) }
     let!(:cart_item_another_product) { create(:cart_item, cart: cart, product: another_product, quantity: 2) }
     let(:cart) { create(:cart, total_price: 71.9) }
+
+    it { expect { service.perform }.to change { cart.reload.last_interaction_at } }
 
     it 'updates cart item quantity to product informed' do
       expect(service.perform).to be_truthy

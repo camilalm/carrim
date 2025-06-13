@@ -13,6 +13,8 @@ RSpec.describe RemoveCartItem do
   context 'when product is in the cart' do
     let!(:cart_item_product) { create(:cart_item, cart: cart, product: product, quantity: 3) }
 
+    it { expect { service.perform }.to change { cart.reload.last_interaction_at } }
+
     it 'removes cart item and updates cart total price' do
       expect(service.perform).to be_truthy
       expect(CartItem.find_by(id: cart_item_product.id)).to be_nil
@@ -24,6 +26,8 @@ RSpec.describe RemoveCartItem do
     let!(:cart_item_product) { create(:cart_item, cart: cart, product: product, quantity: 5) }
     let!(:cart_item_another_product) { create(:cart_item, cart: cart, product: another_product, quantity: 2) }
     let(:cart) { create(:cart) }
+
+    it { expect { service.perform }.to change { cart.reload.last_interaction_at } }
 
     it 'removes cart item and updates cart total price' do
       expect(service.perform).to be_truthy
