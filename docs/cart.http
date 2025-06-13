@@ -1,3 +1,9 @@
+### Show current cart
+##
+curl --request GET \
+     --url {{url}}/cart \
+     --header 'accept: application/json'
+
 ### Register cart adding a item
 ##
 curl --request POST \

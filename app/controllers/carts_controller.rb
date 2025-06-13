@@ -1,6 +1,11 @@
 class CartsController < ApplicationController
   before_action :set_current_cart
 
+  # GET /cart
+  def show
+    render json: @current_cart
+  end
+
   # POST /cart
   # POST /cart/add_item
   def add_item
