@@ -13,12 +13,17 @@ class AddItemToCart
     return if quantity.blank?
 
     update_cart_item
+    update_cart_total_price
   end
 
   private
 
   def update_cart_item
     cart_item.update(quantity: cart_item.quantity + quantity)
+  end
+
+  def update_cart_total_price
+    cart.update(total_price: cart.total_price + (quantity * cart_item.product_price))
   end
 
   def cart_item
