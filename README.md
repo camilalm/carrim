@@ -23,7 +23,7 @@ docker compose up -d
 
 Criar banco de dados
 ```bash
-docker compose run test bundle exec rails db:create db:migrate RAILS_ENV=test
+docker compose run test bundle exec rails db:create db:migrate
 docker compose run web bundle exec rails db:create db:migrate
 ```
 
